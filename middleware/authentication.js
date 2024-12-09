@@ -6,6 +6,8 @@ const auth = async (req, res, next) => {
   //check header
   const authHeader = req.headers.authorization
   if(!authHeader || !authHeader.startsWith('Bearer ')){
+    console.log("unauthenticated");
+    
     throw new UnauthenticatedError('Authentication Invalid')
   }
 
@@ -14,7 +16,9 @@ const auth = async (req, res, next) => {
   try {
     const payload  = jwt.verify(token, process.env.JWT_SECRET)
     //attach the user to the job routes
-    req.user = {userId:payload.userId, name:payload.name}
+    // console.log(payload);
+    
+    req.user = {userId:payload.userID, name:payload.name}
     next()
   } catch (error) {
     throw new UnauthenticatedError('Authentication Invalid')
